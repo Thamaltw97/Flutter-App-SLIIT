@@ -35,6 +35,7 @@ class ProblemView extends StatelessWidget {
                   builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
                   if(snapshot.hasData){
                     isPrinted = true;
+
                     return ListView.builder(
                       itemCount: snapshot.data!.docs.length,
                       itemBuilder: (context, index) {
@@ -42,30 +43,29 @@ class ProblemView extends StatelessWidget {
                         return Padding(
                           padding: EdgeInsets.only(top: 0.0),
                           child: Card(
-                            margin: EdgeInsets.fromLTRB(20.0, 6.0, 20.0, 0.0),
+                            margin: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 0.0),
                             child: ListTile(
                               leading: Icon(Icons.keyboard_arrow_right),
                               title: Text(snapshot.data!.docs[index]['problem']),
                               // subtitle: Text('Age range: ${snapshot.data!.docs[index]['minAge']}-${snapshot.data!.docs[index]['maxAge']} | ${snapshot.data!.docs[index]['civilStatus']} | ${snapshot.data!.docs[index]['jobStatus']}'),
-
                             ),
                           ),
                         );
                       }
                     );
                   } else if (isPrinted) {
+
                       return ListView.builder(
                         itemCount: dataSet.length,
                         itemBuilder: (context, index) {
                           return Padding(
                             padding: EdgeInsets.only(top: 0.0),
                             child: Card(
-                              margin: EdgeInsets.fromLTRB(20.0, 6.0, 20.0, 0.0),
+                              margin: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 0.0),
                               child: ListTile(
                                 leading: Icon(Icons.keyboard_arrow_right),
                                 title: Text(dataSet[index]['problem']),
                                 // subtitle: Text('Age range: ${snapshot.data!.docs[index]['minAge']}-${snapshot.data!.docs[index]['maxAge']} | ${snapshot.data!.docs[index]['civilStatus']} | ${snapshot.data!.docs[index]['jobStatus']}'),
-
                               ),
                             ),
                           );
@@ -83,6 +83,8 @@ class ProblemView extends StatelessWidget {
     );
   }
 }
+
+
 
 // class ProblemView extends StatefulWidget {
 //   const ProblemView({ Key? key }) : super(key: key);

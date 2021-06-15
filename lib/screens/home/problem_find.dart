@@ -15,8 +15,8 @@ class _ProblemFindState extends State<ProblemFind> {
   final CollectionReference collectionReference = FirebaseFirestore.instance.collection('problems');
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _age = TextEditingController();
-  final TextEditingController _civilStatus = TextEditingController();
-  final TextEditingController _jobStatus = TextEditingController();
+  // final TextEditingController _civilStatus = TextEditingController();
+  // final TextEditingController _jobStatus = TextEditingController();
   final listOfCivilStatus = ["married", "unmarried"];
   String civilStatusdropdownValue = 'married';
   final listOfJobStatus = ["employed", "unemployed"];
@@ -40,13 +40,16 @@ class _ProblemFindState extends State<ProblemFind> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
+
               SizedBox(height: 50.0,),
+
               Text("Please enter your details",
                   style: TextStyle(
                       fontWeight: FontWeight.w200,
                       fontSize: 30,
                       fontFamily: 'Roboto',
                       fontStyle: FontStyle.italic)),
+
                 Padding(
                   padding: EdgeInsets.all(20.0),
                   child: TextFormField(
@@ -66,26 +69,6 @@ class _ProblemFindState extends State<ProblemFind> {
                     },
                   ),
                 ),
-
-                // Padding(
-                // padding: EdgeInsets.all(20.0),
-                //   child: TextFormField(
-                //     controller: _civilStatus,
-                //     decoration: InputDecoration(
-                //       labelText: "Enter Civil Status",
-                //       enabledBorder: OutlineInputBorder(
-                //         borderRadius: BorderRadius.circular(10.0),
-                //       ),
-                //     ),
-                //     // The validator receives the text that the user has entered.
-                //     validator: (value) {
-                //       if (value!.isEmpty) {
-                //         return 'Enter Civil Status';
-                //       }
-                //       return null;
-                //     },
-                //   ),
-                // ),
 
                 Padding(
                   padding: EdgeInsets.all(20.0),
@@ -139,104 +122,125 @@ class _ProblemFindState extends State<ProblemFind> {
 
                 Padding(
                 padding: EdgeInsets.all(20.0),
-                child: ElevatedButton(
+                child: RaisedButton(
+                  padding: EdgeInsets.symmetric(vertical: 15, horizontal: 42),
                     onPressed: () {
-                      Problems problems = new Problems(age: _age.text, civilStatus: civilStatusdropdownValue, jobStatus: jobStatusdropdownValue);
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => ProblemView(problems: problems)),
-                      );
+                      if (_formKey.currentState!.validate()) {
+                      if (int.parse(_age.text) > 100) {
+                        showDialog(context: context, builder: (context) => CustomDialog(
+                        title: 'ERROR', 
+                        description: 'Please enter valid age.', 
+                        buttonText: 'OK'));
+                      } else {
+                        Problems problems = new Problems(
+                          age: _age.text, 
+                          civilStatus: civilStatusdropdownValue, 
+                          jobStatus: jobStatusdropdownValue
+                        );
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => ProblemView(problems: problems)),
+                        );
+                      }
+                        
+                      }
                     },
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(30)),
+                    ),
                     child: Text('Find your problems'),
+                    color: Colors.blue,
+                    textColor: Colors.white,
                   ),
                 ),
                 SizedBox(height: 180.0,),
 
-          
-
-              // SizedBox(height: 10.0,),
-              // Row(
-              //   children: <Widget>[
-              //     new Flexible(
-              //     child: new TextFormField(
-              //         controller: _age,
-              //         decoration: InputDecoration(
-              //           hintText: 'Age'
-              //         ),
-              //         validator: (val) => val!.isEmpty ? 'Required' : null,
-              //       ),
-              //     ),
-              //     new Flexible(
-              //     child: new TextFormField(
-              //         controller: _civilStatus,
-              //         decoration: InputDecoration(
-              //           hintText: 'Civil status'
-              //         ),
-              //         validator: (val) => val!.isEmpty ? 'Required' : null,
-              //       ),
-              //     ),
-              //     new Flexible(
-              //     child: new TextFormField(
-              //         controller: _jobStatus,
-              //         decoration: InputDecoration(
-              //           hintText: 'Job status'
-              //         ),
-              //         validator: (val) => val!.isEmpty ? 'Required' : null,
-              //       ),
-              //     ),
-              //   ],
-              // ),
-
-              // Row(
-              //   children: <Widget>[
-              //     RaisedButton(
-              //       color: Colors.pink[400],
-              //       child: Text(
-              //         'Search',
-              //         style: TextStyle(color: Colors.white),
-              //       ),
-              //       onPressed: () {
-
-              //       },
-              //     )
-              //   ],
-              // ),
-
-
-              
-            //   Expanded(
-            //     child: StreamBuilder(
-            //       stream: collectionReference.snapshots(),  // collectionReference.where('minAge', isEqualTo: 18).where('civilStatus', isEqualTo: 'unmarried').snapshots()
-            //       builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-            //       if(snapshot.hasData){
-            //         return ListView.builder(
-            //           itemCount: snapshot.data!.docs.length,
-            //           itemBuilder: (context, index) {
-            //             return Padding(
-            //               padding: EdgeInsets.only(top: 0.0),
-            //               child: Card(
-            //                 margin: EdgeInsets.fromLTRB(20.0, 6.0, 20.0, 0.0),
-            //                 child: ListTile(
-            //                   leading: Icon(Icons.keyboard_arrow_right),
-            //                   title: Text(snapshot.data!.docs[index]['problem']),
-            //                   // subtitle: Text('Age range: ${snapshot.data!.docs[index]['minAge']}-${snapshot.data!.docs[index]['maxAge']} | ${snapshot.data!.docs[index]['civilStatus']} | ${snapshot.data!.docs[index]['jobStatus']}'),
-
-            //                 ),
-            //               ),
-            //             );
-            //           }
-            //         );
-            //       }
-            //       return Center(child: CircularProgressIndicator(),);
-            //       },
-
-            // ))
-              
             ],
           ),
         )
       ),
+    );
+  }
+}
+
+
+// Alert dialog
+class CustomDialog extends StatelessWidget {
+
+  final String title, description, buttonText;
+  // final Image image;
+
+  const CustomDialog({ required this.title, required this.description, required this.buttonText });
+
+  @override
+  Widget build(BuildContext context) {
+    return Dialog(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(16),
+      ),
+      elevation: 0,
+      backgroundColor: Colors.transparent,
+      child: dialogContent(context),
+    );
+  }
+
+  dialogContent(BuildContext context) {
+    return Stack(
+      children: <Widget>[
+        Container(
+          padding: EdgeInsets.only(top: 100, bottom: 16, left: 16, right: 16),
+          margin: EdgeInsets.only(top: 16),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            shape: BoxShape.rectangle,
+            borderRadius: BorderRadius.circular(17),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black26,
+                blurRadius: 10.0,
+                offset: Offset(0.0, 10.0),
+              )
+            ]
+          ),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              Text(
+                title,
+                style: TextStyle(
+                  fontSize: 24.0,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+              SizedBox(height: 24.0),
+              Text(
+                description, style: TextStyle(
+                  fontSize: 16.0
+                ),
+              ),
+              SizedBox(height: 24.0),
+              Align(
+                alignment: Alignment.bottomRight,
+                child: FlatButton(onPressed: () {
+                  Navigator.pop(context);
+                }, 
+                child: Text('OK')),
+              )
+            ],
+          ),
+        ),
+        Positioned(
+          top: 0,
+          left: 16,
+          right: 16,
+          child: CircleAvatar(
+            backgroundColor: Colors.blueAccent,
+            radius: 50,
+            backgroundImage: AssetImage('assets/failed.gif'),
+          ),
+        )
+      ],
     );
   }
 }
